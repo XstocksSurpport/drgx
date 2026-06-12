@@ -639,7 +639,15 @@ code {
 .bind-secret {
   min-height: 88px;
   resize: vertical;
-  font-family: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.bind-hint {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-muted, #64748b);
 }
 
 .admin-page {

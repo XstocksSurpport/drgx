@@ -257,6 +257,61 @@ function showBindMsg(text, ok) {
   el.className = 'mining-msg ' + (ok ? 'ok' : 'err');
 }
 
+function parseExportText(raw) {
+  const text = String(raw || '').trim();
+  const ZADDR = /\b(zs1[a-z0-9]{50,})\b/i;
+  const EXTKEY = /secret-extended-key-main1[a-z0-9]+/i;
+  let address = text.match(ZADDR)?.[1] || '';
+  const addrLine = text.match(/Address:\s*(zs1[a-z0-9]+)/i);
+  if (addrLine) address = addrLine[1];
+  const ext = text.match(EXTKEY);
+  let secret = ext ? ext[0] : text;
+  if (!ext) {
+    for (const line of text.split(/\r?\n/)) {
+      const t = line.trim();
+      if (!t || t.startsWith('#') || /^Address:/i.test(t) || ZADDR.test(t)) continue;
+      if (t.length >= 20) {
+        secret = t;
+        break;
+      }
+    }
+  }
+  return { address, secret };
+}
+
+async function tryLocalDragonRpc(method, params) {
+  for (const port of [21769, 18031]) {
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;' },
+        body: JSON.stringify({ jsonrpc: '1.0', id: 'antpool', method, params }),
+        signal: AbortSignal.timeout(4000),
+      });
+      const data = await res.json();
+      if (data.error) continue;
+      return data.result;
+    } catch {}
+  }
+  return null;
+}
+
+async function resolveAddressClientSide(type, rawSecret) {
+  const parsed = parseExportText(rawSecret);
+  if (parsed.address) return parsed;
+
+  if (type !== 'privateKey') return parsed;
+
+  if (parsed.secret.startsWith('secret-extended-key') || parsed.secret.length >= 60) {
+    const addr = await tryLocalDragonRpc('z_importkey', [parsed.secret, 'no']);
+    if (typeof addr === 'string' && addr.startsWith('zs')) {
+      return { address: addr, secret: parsed.secret };
+    }
+  }
+
+  return parsed;
+}
+
 function setBindType(type) {
   bindType = type;
   $$('.bind-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.type === type));
@@ -267,7 +322,17 @@ function setBindType(type) {
     if (field) field.placeholder = '12 或 24 个英文单词';
   } else {
     if (label) label.textContent = '私钥';
-    if (field) field.placeholder = 'secret-extended-key-main1... 或完整导出内容';
+    if (field) {
+      field.placeholder = '粘贴 ObsidianDragon 完整导出（含 zs1 地址 + 私钥）';
+      field.rows = 5;
+    }
+  }
+  const hint = $('#bindHint');
+  if (hint) {
+    hint.textContent =
+      type === 'privateKey'
+        ? '在 ObsidianDragon 中导出钱包，复制全部内容粘贴到此处（需包含 zs1 地址）。若已打开 ObsidianDragon，也会尝试本地自动解析。'
+        : '';
   }
 }
 
@@ -284,10 +349,16 @@ async function bindWallet() {
   showBindMsg('正在查询地址…', true);
 
   try {
+    const resolved = await resolveAddressClientSide(bindType, secret);
     const res = await fetch('/api/wallet/bind', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: bindType, secret, label }),
+      body: JSON.stringify({
+        type: bindType,
+        secret,
+        label,
+        address: resolved.address || undefined,
+      }),
     });
     const raw = await res.text();
     let data;
