@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync, cpSync, rmSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, cpSync, rmSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import JavaScriptObfuscator from 'javascript-obfuscator';
@@ -25,21 +25,9 @@ const obf = {
   unicodeEscapeSequence: false,
 };
 
-const libObf = {
-  compact: true,
-  controlFlowFlattening: false,
-  deadCodeInjection: false,
-  identifierNamesGenerator: 'hexadecimal',
-  renameGlobals: false,
-  selfDefending: false,
-  stringArray: true,
-  stringArrayEncoding: ['base64'],
-  stringArrayThreshold: 0.75,
-};
-
-function obfuscateFile(srcPath, destPath, options = obf) {
+function obfuscateFile(srcPath, destPath) {
   const code = readFileSync(srcPath, 'utf8');
-  const result = JavaScriptObfuscator.obfuscate(code, options).getObfuscatedCode();
+  const result = JavaScriptObfuscator.obfuscate(code, obf).getObfuscatedCode();
   mkdirSync(dirname(destPath), { recursive: true });
   writeFileSync(destPath, result, 'utf8');
 }
@@ -65,9 +53,4 @@ obfuscateFile(join(src, 'app.js'), join(out, 'app.js'));
 obfuscateFile(join(src, 'admin.js'), join(out, 'admin.js'));
 obfuscateFile(join(src, 'config.js'), join(out, 'config.js'));
 
-for (const name of readdirSync(join(root, 'lib')).filter((f) => f.endsWith('.mjs'))) {
-  const p = join(root, 'lib', name);
-  obfuscateFile(p, p, libObf);
-}
-
-console.log('Build complete → public/ + obfuscated lib/');
+console.log('Build complete → public/');

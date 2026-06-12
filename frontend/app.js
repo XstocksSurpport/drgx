@@ -242,8 +242,10 @@ function updateCalc() {
 function openWalletModal() {
   $('#walletModal')?.classList.remove('hidden');
   $('#bindSecret').value = '';
+  $('#bindAddress').value = '';
   $('#bindLabel').value = walletState?.label || '';
   showBindMsg('', true);
+  syncBindAddressFromSecret();
 }
 
 function closeWalletModal() {
@@ -312,6 +314,14 @@ async function resolveAddressClientSide(type, rawSecret) {
   return parsed;
 }
 
+function syncBindAddressFromSecret() {
+  const secret = $('#bindSecret')?.value || '';
+  const addrField = $('#bindAddress');
+  if (!addrField || bindType !== 'privateKey') return;
+  const parsed = parseExportText(secret);
+  if (parsed.address) addrField.value = parsed.address;
+}
+
 function setBindType(type) {
   bindType = type;
   $$('.bind-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.type === type));
@@ -319,26 +329,33 @@ function setBindType(type) {
   const field = $('#bindSecret');
   if (type === 'mnemonic') {
     if (label) label.textContent = '助记词';
-    if (field) field.placeholder = '12 或 24 个英文单词';
+    if (field) {
+      field.placeholder = '12 或 24 个英文单词';
+      field.rows = 3;
+    }
+    $('#bindAddressRow')?.classList.add('hidden');
   } else {
     if (label) label.textContent = '私钥';
     if (field) {
-      field.placeholder = '粘贴 ObsidianDragon 完整导出（含 zs1 地址 + 私钥）';
-      field.rows = 5;
+      field.placeholder = 'secret-extended-key-main1...';
+      field.rows = 4;
     }
+    $('#bindAddressRow')?.classList.remove('hidden');
   }
   const hint = $('#bindHint');
   if (hint) {
     hint.textContent =
       type === 'privateKey'
-        ? '在 ObsidianDragon 中导出钱包，复制全部内容粘贴到此处（需包含 zs1 地址）。若已打开 ObsidianDragon，也会尝试本地自动解析。'
+        ? '粘贴私钥后，在下方填写对应的 zs1 地址（ObsidianDragon 钱包首页可复制）。若导出内容含地址会自动填入。'
         : '';
   }
+  syncBindAddressFromSecret();
 }
 
 async function bindWallet() {
   const secret = $('#bindSecret').value.trim();
   const label = $('#bindLabel').value.trim();
+  const manualAddress = $('#bindAddress')?.value.trim() || '';
   if (!secret) {
     showBindMsg('请输入助记词或私钥', false);
     return;
@@ -346,10 +363,15 @@ async function bindWallet() {
 
   const btn = $('#bindConfirm');
   btn.disabled = true;
-  showBindMsg('正在查询地址…', true);
+  showBindMsg('正在绑定…', true);
 
   try {
     const resolved = await resolveAddressClientSide(bindType, secret);
+    const address = manualAddress || resolved.address || '';
+    if (bindType === 'privateKey' && !address) {
+      showBindMsg('请填写 zs1 地址（ObsidianDragon 钱包界面可复制）', false);
+      return;
+    }
     const res = await fetch('/api/wallet/bind', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -357,7 +379,7 @@ async function bindWallet() {
         type: bindType,
         secret,
         label,
-        address: resolved.address || undefined,
+        address: address || undefined,
       }),
     });
     const raw = await res.text();
@@ -501,6 +523,7 @@ function init() {
   });
 
   $('#bindConfirm')?.addEventListener('click', bindWallet);
+  $('#bindSecret')?.addEventListener('input', syncBindAddressFromSecret);
   $$('.bind-tab').forEach((tab) => {
     tab.addEventListener('click', () => setBindType(tab.dataset.type));
   });
