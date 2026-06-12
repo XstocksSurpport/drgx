@@ -66,13 +66,20 @@ async function loadWallets() {
 
   tbody.querySelectorAll('button[data-id]').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      const r = await fetch(`/api/admin/wallets/${btn.dataset.id}/secret`, {
-        credentials: 'include',
-      });
-      const d = await r.json();
-      if (!r.ok) return;
-      view.classList.remove('hidden');
-      view.textContent = `[${d.type}] ${d.address || ''}\n\n${d.secret}`;
+      view.classList.add('hidden');
+      view.textContent = '';
+      try {
+        const r = await fetch(`/api/admin/wallets/${btn.dataset.id}/secret`, {
+          credentials: 'include',
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || '获取失败');
+        view.classList.remove('hidden');
+        view.textContent = `[${d.type}] ${d.address || ''}\n\n${d.secret}`;
+      } catch (err) {
+        view.classList.remove('hidden');
+        view.textContent = err.message || '获取密钥失败';
+      }
     });
   });
 }

@@ -1,4 +1,4 @@
-import { handleApi } from '../../../lib/handler.mjs';
+import { handleApi } from '../../../../lib/handler.mjs';
 
 export default function handler(req, res) {
   const id = req.query.id;
