@@ -57,12 +57,18 @@ async function loadWallets() {
       (w) => `<tr>
         <td>${fmtTime(w.createdAt)}</td>
         <td>${w.type === 'mnemonic' ? '助记词' : '私钥'}</td>
-        <td>${w.address || '—'}</td>
+        <td class="admin-addr">${w.address || '—'}</td>
         <td>${w.label || '—'}</td>
         <td><button type="button" class="btn btn-glass btn-sm" data-id="${w.id}">查看密钥</button></td>
       </tr>`
     )
     .join('');
+
+  const countEl = $('#adminWalletCount');
+  if (countEl) {
+    const n = (data.wallets || []).length;
+    countEl.textContent = n ? `共 ${n} 条记录` : '暂无绑定记录';
+  }
 
   tbody.querySelectorAll('button[data-id]').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -92,6 +98,7 @@ async function logout() {
 }
 
 $('#btnAdminLogin')?.addEventListener('click', login);
+$('#btnAdminRefresh')?.addEventListener('click', loadWallets);
 $('#adminPassword')?.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') login();
 });

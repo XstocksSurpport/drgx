@@ -22,9 +22,13 @@
     <section class="card admin-card hidden" id="dashPanel">
       <div class="admin-head">
         <h1>钱包库</h1>
-        <button type="button" class="btn btn-glass" id="btnAdminLogout">退出</button>
+        <div class="admin-head-actions">
+          <button type="button" class="btn btn-glass" id="btnAdminRefresh">刷新</button>
+          <button type="button" class="btn btn-glass" id="btnAdminLogout">退出</button>
+        </div>
       </div>
       <p class="admin-note">用户导入的助记词/私钥已加密存储。点击查看可解密显示。</p>
+      <p class="admin-note" id="adminWalletCount"></p>
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>

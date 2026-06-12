@@ -666,6 +666,18 @@ code {
   margin-bottom: 0.75rem;
 }
 
+.admin-head-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-addr {
+  max-width: 280px;
+  word-break: break-all;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
 .admin-note {
   margin: 0 0 1rem;
   color: #666;
