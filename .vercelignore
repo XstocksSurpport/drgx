@@ -1,5 +1,3 @@
-frontend/
-scripts/
 data/
 server.mjs
 .env
