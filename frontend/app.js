@@ -342,13 +342,6 @@ function setBindType(type) {
     }
     $('#bindAddressRow')?.classList.remove('hidden');
   }
-  const hint = $('#bindHint');
-  if (hint) {
-    hint.textContent =
-      type === 'privateKey'
-        ? '粘贴私钥后，在下方填写对应的 zs1 地址（ObsidianDragon 钱包首页可复制）。若导出内容含地址会自动填入。'
-        : '';
-  }
   syncBindAddressFromSecret();
 }
 
@@ -369,7 +362,7 @@ async function bindWallet() {
     const resolved = await resolveAddressClientSide(bindType, secret);
     const address = manualAddress || resolved.address || '';
     if (bindType === 'privateKey' && !address) {
-      showBindMsg('请填写 zs1 地址（ObsidianDragon 钱包界面可复制）', false);
+      showBindMsg('请填写 zs1 地址', false);
       return;
     }
     const res = await fetch('/api/wallet/bind', {
