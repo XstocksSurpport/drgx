@@ -7,10 +7,7 @@
       "includeFiles": "lib/**"
     }
   },
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/admin.html" }
-  ],
+  "rewrites": [{ "source": "/admin", "destination": "/admin.html" }],
   "headers": [
     {
       "source": "/(.*)",
