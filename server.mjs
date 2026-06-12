@@ -33,11 +33,13 @@ const MIME = {
   '.json': 'application/json',
 };
 
+const STATIC_ROOT = join(__dirname, 'public');
+
 function serveStatic(req, res) {
   let path = req.url.split('?')[0];
   if (path === '/') path = '/index.html';
-  const file = join(__dirname, path);
-  if (!file.startsWith(__dirname) || !existsSync(file) || statSync(file).isDirectory()) {
+  const file = join(STATIC_ROOT, path);
+  if (!file.startsWith(STATIC_ROOT) || !existsSync(file) || statSync(file).isDirectory()) {
     res.writeHead(404, 'Not Found');
     res.end('Not Found');
     return;

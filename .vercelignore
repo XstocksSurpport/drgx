@@ -1,13 +1,5 @@
-app.js
-admin.js
-config.js
-index.html
-admin.html
-pool.css
-styles.css
-server.mjs
+frontend/
 scripts/
 data/
-bg.jpg
-icon.png
-img/
+server.mjs
+.env

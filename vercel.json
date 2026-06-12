@@ -1,8 +1,12 @@
 {
   "version": 2,
+  "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
-  "rewrites": [{ "source": "/admin", "destination": "/admin.html" }],
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

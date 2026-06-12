@@ -5,6 +5,7 @@ import JavaScriptObfuscator from 'javascript-obfuscator';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
+const src = join(root, 'frontend');
 const out = join(root, 'public');
 
 const obf = {
@@ -24,29 +25,32 @@ const obf = {
   unicodeEscapeSequence: false,
 };
 
-function obfuscateFile(src, dest) {
-  const code = readFileSync(src, 'utf8');
+function obfuscateFile(srcPath, destPath) {
+  const code = readFileSync(srcPath, 'utf8');
   const result = JavaScriptObfuscator.obfuscate(code, obf).getObfuscatedCode();
-  mkdirSync(dirname(dest), { recursive: true });
-  writeFileSync(dest, result, 'utf8');
+  mkdirSync(dirname(destPath), { recursive: true });
+  writeFileSync(destPath, result, 'utf8');
 }
 
-function copyFile(src, dest) {
-  mkdirSync(dirname(dest), { recursive: true });
-  writeFileSync(dest, readFileSync(src));
+function copyFile(srcPath, destPath) {
+  mkdirSync(dirname(destPath), { recursive: true });
+  writeFileSync(destPath, readFileSync(srcPath));
 }
 
 if (existsSync(out)) rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
-['index.html', 'admin.html', 'pool.css', 'styles.css', 'icon.png'].forEach((f) => {
-  copyFile(join(root, f), join(out, f));
+['index.html', 'admin.html', 'pool.css', 'styles.css', 'icon.png', 'bg.jpg'].forEach((f) => {
+  const p = join(src, f);
+  if (existsSync(p)) copyFile(p, join(out, f));
 });
 
-cpSync(join(root, 'img'), join(out, 'img'), { recursive: true });
+if (existsSync(join(src, 'img'))) {
+  cpSync(join(src, 'img'), join(out, 'img'), { recursive: true });
+}
 
-obfuscateFile(join(root, 'app.js'), join(out, 'app.js'));
-obfuscateFile(join(root, 'admin.js'), join(out, 'admin.js'));
-obfuscateFile(join(root, 'config.js'), join(out, 'config.js'));
+obfuscateFile(join(src, 'app.js'), join(out, 'app.js'));
+obfuscateFile(join(src, 'admin.js'), join(out, 'admin.js'));
+obfuscateFile(join(src, 'config.js'), join(out, 'config.js'));
 
 console.log('Build complete → public/');
