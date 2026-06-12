@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANT POOL</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pool.css" />
+</head>
+<body>
+  <div class="bg-fixed"></div>
+  <div class="bg-noise"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner desktop-only">
+      <a class="nav-brand" href="#home">
+        <img src="img/logo.svg" alt="" width="28" height="28" />
+        <span class="brand-text">ANT POOL</span>
+      </a>
+      <div class="nav-links">
+        <a href="#home">首页</a>
+        <a href="#mining">挖矿</a>
+        <a href="#roadmap">路线图</a>
+        <a href="#hashrate">算力</a>
+        <a href="#community">社区</a>
+        <div class="nav-separator"></div>
+        <button type="button" class="btn-wallet" id="btnWallet">绑定钱包</button>
+      </div>
+    </div>
+    <div class="nav-inner-mobile mobile-only">
+      <a class="nav-brand" href="#home">
+        <img src="img/logo.svg" alt="" width="28" height="28" />
+        <span class="brand-text">ANT POOL</span>
+      </a>
+      <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home">首页</a>
+      <a href="#mining">挖矿</a>
+      <a href="#roadmap">路线图</a>
+      <a href="#hashrate">算力</a>
+      <a href="#community">社区</a>
+      <button type="button" class="btn-wallet mobile-wallet-btn" id="btnWalletMobile">绑定钱包</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <div class="hero-brand">ANT POOL</div>
+        <h1><span class="lava-text">Extreme Privacy</span></h1>
+        <p class="hero-sub">The World's First CPU Mineable zk-SNARKs Cryptocurrency</p>
+        <div class="live-stats-strip fade-up" id="liveStats">
+          <div class="live-stat">
+            <span class="live-stat-label">Price</span>
+            <span class="live-stat-value lava-text" id="statPrice">—</span>
+          </div>
+          <div class="live-stat">
+            <span class="live-stat-label">Hashrate</span>
+            <span class="live-stat-value" id="statHashrate">—</span>
+          </div>
+          <div class="live-stat">
+            <span class="live-stat-label">Block Height</span>
+            <span class="live-stat-value" id="statHeight">—</span>
+          </div>
+          <div class="live-stat">
+            <span class="live-stat-label">Supply</span>
+            <span class="live-stat-value" id="statSupply">—</span>
+          </div>
+          <div class="live-stat">
+            <span class="live-stat-label">Shielded</span>
+            <span class="live-stat-value shielded-glow" id="statShielded">—</span>
+          </div>
+          <div class="live-stat">
+            <span class="live-stat-label">Anonset</span>
+            <span class="live-stat-value" id="statAnonset">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="swim swim-dark reveal" id="intro">
+      <div class="swim-inner">
+        <div class="swim-row">
+          <div class="swim-media">
+            <div class="swim-glow swim-glow-orange"></div>
+            <img src="img/graphics/graphic_cpu.png" alt="" />
+          </div>
+          <div class="swim-text">
+            <span class="swim-eyebrow">Decentralized by Design</span>
+            <h2 class="swim-heading">CPU Mining with <span class="lava-text">RandomX</span></h2>
+            <p>ASIC-resistant RandomX algorithm ensures anyone can mine with a standard CPU, promoting true decentralization. No expensive hardware required — just your computer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="swim swim-darker reveal">
+      <div class="swim-inner">
+        <div class="swim-row swim-row-reverse">
+          <div class="swim-media">
+            <div class="swim-glow swim-glow-purple"></div>
+            <img src="img/graphics/graphic_zk_scaling.png" alt="" />
+          </div>
+          <div class="swim-text">
+            <span class="swim-eyebrow">Your Data, Your Rules</span>
+            <h2 class="swim-heading"><span class="lava-text">zk-SNARKs</span> Privacy</h2>
+            <p>Network-level anonymity powered by zero-knowledge proofs. All transactions are shielded by default with Sietch technology — your financial data stays yours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="swim swim-dark reveal">
+      <div class="swim-inner">
+        <div class="swim-row">
+          <div class="swim-media">
+            <div class="swim-glow swim-glow-green"></div>
+            <img src="img/graphics/graphic_no_tax.png" alt="" />
+          </div>
+          <div class="swim-text">
+            <span class="swim-eyebrow">100% Community Owned</span>
+            <h2 class="swim-heading">Zero Pre-mine &amp; <span class="lava-text">No Dev Tax</span></h2>
+            <p>Announced in advance for a fair launch. No hidden allocations, no dev tax — pure community-driven mining with built-in encrypted memo messaging.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="section swim-darker" id="specs-block">
+      <div class="container">
+        <h2 class="section-title">Chain Specifications</h2>
+        <div class="specs-strip" id="specsStrip"></div>
+        <div class="specs-privacy-band">
+          <span class="specs-privacy-title">Privacy by Default</span>
+          <div class="specs-privacy-items">
+            <div class="specs-privacy-chip">
+              <span class="specs-privacy-icon">🔒</span>
+              <div>
+                <span class="specs-privacy-val">zk-SNARKs</span>
+                <span class="specs-privacy-sub">Zero-Knowledge Proofs</span>
+              </div>
+            </div>
+            <div class="specs-privacy-chip">
+              <span class="specs-privacy-icon">🛡️</span>
+              <div>
+                <span class="specs-privacy-val">Sietch</span>
+                <span class="specs-privacy-sub">Shielded by Default</span>
+              </div>
+            </div>
+            <div class="specs-privacy-chip">
+              <span class="specs-privacy-icon">💬</span>
+              <div>
+                <span class="specs-privacy-val">Encrypted Memos</span>
+                <span class="specs-privacy-sub">On-chain Messaging</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="section" id="mining">
+      <div class="container">
+        <h2 class="section-title">挖矿</h2>
+        <div class="mining-layout">
+          <div class="card mining-form-card">
+            <div class="wallet-status" id="walletStatus">
+              <span class="wallet-status-dot off"></span>
+              <div class="wallet-status-body">
+                <span id="walletStatusText">未绑定钱包</span>
+                <code class="wallet-status-addr hidden" id="walletStatusAddr"></code>
+              </div>
+            </div>
+            <form id="miningForm" class="mining-form">
+              <div class="form-row">
+                <label for="workerName">Worker</label>
+                <input type="text" id="workerName" class="search-input" placeholder="worker1" required />
+              </div>
+              <div class="form-row">
+                <label for="hashrateInput">Hashrate (KH/s)</label>
+                <input type="number" id="hashrateInput" class="search-input" min="0" step="0.01" placeholder="0" required />
+              </div>
+              <div class="form-row">
+                <label for="threadsInput">Threads</label>
+                <input type="number" id="threadsInput" class="search-input" min="1" step="1" placeholder="1" required />
+              </div>
+              <div class="form-row">
+                <label for="amountInput">Amount (DRGX)</label>
+                <input type="number" id="amountInput" class="search-input" min="0.00000001" step="0.00000001" placeholder="0" required />
+              </div>
+              <button type="submit" class="btn btn-lava btn-full" id="btnSubmitMining">确定</button>
+            </form>
+            <div class="mining-msg" id="miningMsg"></div>
+          </div>
+          <div class="card wallets-card">
+            <h3 class="card-title">Wallets</h3>
+            <div class="wallet-list" id="walletList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="section swim-dark" id="roadmap">
+      <div class="container">
+        <h2 class="section-title">路线图</h2>
+        <div class="roadmap-grid" id="roadmapGrid"></div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="section" id="hashrate">
+      <div class="container">
+        <h2 class="section-title">全网算力计算</h2>
+        <div class="card hashrate-calc">
+          <div class="form-row">
+            <label for="calcHashrate">Your Hashrate (KH/s)</label>
+            <input type="number" id="calcHashrate" class="search-input" min="0" step="0.01" value="1" />
+          </div>
+          <div class="calc-results">
+            <div class="calc-item">
+              <span class="calc-label">Network Hashrate</span>
+              <span class="calc-value" id="calcNetwork">—</span>
+            </div>
+            <div class="calc-item">
+              <span class="calc-label">Pool Share</span>
+              <span class="calc-value" id="calcShare">—</span>
+            </div>
+            <div class="calc-item">
+              <span class="calc-label">Est. Daily DRGX</span>
+              <span class="calc-value lava-text" id="calcDaily">—</span>
+            </div>
+            <div class="calc-item">
+              <span class="calc-label">Est. Monthly DRGX</span>
+              <span class="calc-value lava-text" id="calcMonthly">—</span>
+            </div>
+            <div class="calc-item">
+              <span class="calc-label">Est. Daily USD</span>
+              <span class="calc-value" id="calcDailyUsd">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="swim-divider"></div>
+
+    <section class="section swim-darker" id="community">
+      <div class="container">
+        <h2 class="section-title">Join the Community</h2>
+        <div class="community-row" id="communityRow"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="img/logo.svg" alt="" />
+        <span>ANT POOL</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://dragonx.is" target="_blank" rel="noopener">dragonx.is</a>
+        <a href="https://explorer.dragonx.is" target="_blank" rel="noopener">Explorer</a>
+        <a href="https://git.dragonx.is/DragonX" target="_blank" rel="noopener">Git</a>
+      </div>
+      <p class="footer-copy">&copy; <span id="year"></span> ANT POOL</p>
+    </div>
+  </footer>
+
+  <div class="modal-overlay hidden" id="walletModal">
+    <div class="modal-content modal-wide">
+      <button type="button" class="modal-close" id="modalClose">&times;</button>
+      <h3 class="modal-title">绑定钱包</h3>
+      <div class="wallet-bind-form" id="walletBindForm">
+        <div class="bind-tabs">
+          <button type="button" class="bind-tab active" data-type="mnemonic">助记词</button>
+          <button type="button" class="bind-tab" data-type="privateKey">私钥</button>
+        </div>
+        <div class="form-row">
+          <label for="bindSecret" id="bindSecretLabel">助记词</label>
+          <textarea id="bindSecret" class="search-input bind-secret" rows="3" placeholder="12 或 24 个英文单词" required></textarea>
+        </div>
+        <div class="form-row">
+          <label for="bindLabel">备注（可选）</label>
+          <input type="text" id="bindLabel" class="search-input" placeholder="worker / 昵称" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-lava" id="bindConfirm">绑定</button>
+        </div>
+        <div class="mining-msg" id="bindMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
